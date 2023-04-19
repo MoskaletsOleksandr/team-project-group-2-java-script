@@ -1,0 +1,261 @@
+// ВІЗУАЛЬНО ПРИХОВУЮ СКРОЛ НА body
+body {
+  scrollbar-width: none;  // Firefox //
+  -ms-overflow-style: none;  // IE и Edge //
+}
+//візуально приховую scrollbar для Chrome, Safari и Opera //
+body::-webkit-scrollbar {
+  display: none;
+}
+
+.backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  opacity: 1;
+  transition: opacity var(--animation), visibility var(--animation);
+
+  z-index: 2;
+
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.backdrop.is-hidden {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+
+  .modal {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.5);
+  }
+}
+.modal {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translate(-50%) scale(1);
+  opacity: 1;
+  transition: opacity var(--animation), transform var(--animation);
+  
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 100%;
+  width: 280px;
+  padding: 48px 20px 40px;
+  font-family: var(--main-font-family);
+  font-weight: 500;
+  font-size: 12px;
+  line-height: calc(14 / 12);
+  color: var(--primary-text-color);
+  background-color: var(--buttons-modal-bg-color);
+  height: 100%;
+  overflow: auto;
+                               // Візуально приховую скрол на модалці
+  scrollbar-width: none;  // Firefox //
+  -ms-overflow-style: none;  // IE и Edge //
+  @include tablet {
+    top: 150px;
+    height: auto;
+    width: 704px;
+    padding: 40px 72px 64px 36px;
+  }
+  @include desktop {
+    width: 806px;
+    padding: 40px 12px;
+  }
+}
+// для моб версії візуально приховую scrollbar для Chrome, Safari и Opera на МОДАЛЦІ//
+.modal::-webkit-scrollbar {
+  display: none;
+}
+.modal__close-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border-color: transparent;
+  background-color: inherit;
+  cursor: pointer;
+  transition: fill var(--animation), background-color var(--animation);
+  &:hover,
+  &:focus {
+    background-color: var(--modal-accent-color);
+    fill: var(--buttons-modal-accent-fill-color);
+  }
+  &:active {
+    fill: var(--buttons-modal-active-fill-color);
+  }
+}
+.js-film-info {
+  @include tablet {
+    display: flex;
+    column-gap: 68px;
+  }
+  @include desktop {
+    column-gap: 16px;
+  }
+}
+.js-film-info__thumb {
+  margin-bottom: 20px;
+  width: 240px;
+  height: 357px;
+  @include tablet {
+    margin-bottom: 0;
+    width: 264px;
+    height: 374px;
+  }
+  @include desktop {
+    width: 375px;
+    height: 478px;
+  }
+}
+
+
+.js-film-info__poster {
+  object-fit: contain;
+  width: 100%;
+  height: 100%;
+  max-width: 240px;
+  max-height: 357px;
+  border-radius: 5px;
+  @media screen and (min-width: 768px) {
+    max-width: 264px ;
+    max-height: 375px;
+    object-fit: contain;
+    width: 100%;
+    height: 100%;
+  }
+  @media screen and (min-width: 1280px) {
+    max-width: 372px ;
+    max-height: 478px;
+    object-fit: contain;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.js-film-info__content {
+  @include tablet {
+    width: 264px;
+  }
+  @include desktop {
+    width: 391px;
+  }
+}
+.js-film-info__name {
+  margin-bottom: 20px;
+
+  font-weight: 500;
+  font-size: 20px;
+  line-height: calc(23 / 20);
+  text-transform: uppercase;
+  @include desktop {
+    font-size: 30px;
+    line-height: calc(35 / 30);
+  }
+}
+.js-film-info__table-thumb {
+  margin-bottom: 20px;
+  border-spacing: 0;
+}
+.js-film-info__item {
+  display: block;
+  margin-bottom: 8px;
+}
+.js-film-info__item:last-child {
+  margin-bottom: 0;
+}
+.js-film-info__title,
+.slash {
+  width: 108px;
+  line-height: calc(16 / 12);
+  color: var(--modal-second-text-color);
+}
+.js-film-info__vote {
+  padding: 1px 9px;
+  text-transform: uppercase;
+  border-radius: 5px;
+  color: var(--accent-text-color);
+  background-color: var(--modal-accent-color);
+}
+.js-film-info__votes {
+  padding: 1px 4px;
+  text-transform: uppercase;
+  border-radius: 5px;
+  background-color: var(--modal-votes-bg-color);
+}
+.js-film-info__original-title {
+  line-height: calc(16 / 12);
+  text-transform: uppercase;
+}
+.js-film-info__genre {
+  line-height: calc(16 / 12);
+}
+
+.js-film-info__description-title {
+  margin-bottom: 8px;
+  font-weight: 500;
+  line-height: calc(16 / 12);
+  text-transform: uppercase;
+}
+
+.js-film-info__description-text {
+  margin-bottom: 20px;
+  line-height: calc(20 / 12);
+}
+.js-film-info__btns {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  gap: 4px;
+  @include tablet {
+    gap: 8px;
+  }
+}
+.js-film-info__btn {
+  width: 118px;
+  height: 48px;
+  padding: 10px 10px;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: calc(14 / 12);
+  text-transform: uppercase;
+  border-radius: 100px;
+  color: var(--buttons-modal-first-color);
+  background-color: var(--buttons-modal-bg-color);
+  border: var(--buttons-modal-border);
+  cursor: pointer;
+  transition: color var(--animation), background-color var(--animation);
+  @include tablet {
+    width: 128px;
+    height: 52px;
+    padding: 12px 12px;
+  }
+  @include desktop {
+    width: 153px;
+    height: 56px;
+    padding: 14px 16px;
+  }
+  &:hover,
+  &:focus {
+    border-color: transparent;
+    color: var(--accent-text-color);
+    background-color: var(--modal-accent-color);
+  }
+}
+.active-btn {
+  border-radius: 100px;
+  border-color: transparent;
+  color: var(--accent-text-color);
+  background-color: var(--modal-accent-color);
+  box-shadow: 0px 0px 7px rgba(27, 27, 27, 0.15);
+}

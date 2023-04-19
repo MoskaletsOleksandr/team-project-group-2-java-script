@@ -1,20 +1,17 @@
 //імпортуємо бібліотеки та інші файли
-import './js/createGallery';
-import './js/onSearch';
-import './js/pagination';
+import refs from './js/refs';
 import './js/onScrollHeader';
 import './js/btnUp';
 import './js/btnTheme';
-import './js/spinner';
+import throttle from 'lodash.throttle'; // npm i lodash.throttle
 import { fetchTrendMoves, fetchDataById, fetchMovesByKeyword } from './js/api';
-import {
-  createTrendMovesMarkup,
-  createTrailerIdAndKeysArray,
-} from './js/createMarkup';
 import { createMoveModalMarkup } from './js/create-modal-markup';
-import { Notify } from 'notiflix/build/notiflix-notify-aio';
-import refs from './js/refs';
 
+import { renderTrailerMarkup } from './js/createGallery';
+
+//
+//
+//
 //
 //
 //
@@ -28,34 +25,29 @@ import refs from './js/refs';
 //
 //
 // refs
-// const refs = {
-//   searchFormEl: document.querySelector('.form-search'),
-//   searchInputEl: document.querySelector('.input-search'),
-//   galleryContainerEl: document.querySelector('.gallery-container'),
-//   galleryListEl: document.querySelector('.gallery-list'),
-//   aboutTeamBtn: document.querySelector('.about-team'),
-//   btnUpEl: document.querySelector('.btn-up'),
-//   bodyEl: document.querySelector('body'),
-//   backdropMovieModal: document.querySelector('.backdrop'),
-//   movieModalEl: document.querySelector('div[data-movie-modal]'),
-//   movieModalFilmInfoEl: document.querySelector('.js-film-info'),
-//   modalCloseBtn: document.querySelector('button[data-movie-modal-close]'),
-//   // addToWatchedBtn: document.querySelector('button[data-btn-to-watched]'),
-//   //   addToQueueBtn: document.querySelector('button[data-btn-to-queue]'),
-//   teamModalOpenBtn: document.querySelector('button[data-team-modal-open]'),
-//   teamModalCloseBtn: document.querySelector('button[data-team-modal-close]'),
-//   teamModal: document.querySelector('div[data-team-modal]'),
-// };
-//
-//
-let movieIdForModalMarkup = null; //При натисканні на картку фільму на головній сторінці сюди заисується id
+let movieIdForLibModalMarkup = null; //При натисканні на картку фільму на головній сторінці сюди заисується id
 // фільму і за цим id відбувається запит на бекенд
-export let dataForModalMarkup = null; //Об'єкт із повною інформацією про фільм,
+export let dataForLibModalMarkup = null; //Об'єкт із повною інформацією про фільм,
 //який ми отримуємо після натискання на картку фільму на головній сторінці.
 // Цей об'єкт перезаписується щоразу після натискання на картку
-
-//Аліна присяжнюк
-
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//Аліна присяжнюк дещо сплутала
 // const headerEl = document.querySelector('.header');
 // const headerContainer = document.querySelector('.header-container');
 // const logoHeader = document.querySelector('.header-logo');
@@ -85,7 +77,7 @@ export let dataForModalMarkup = null; //Об'єкт із повною інфор
 
 //   if (window.pageYOffset > positionHeader && localStorage.theme === 'dark') {
 //     headerContainer.classList.add('fixed-header-dark');
-//     // localStorage.setItem('pageYOffset', JSON.stringify(window.pageYOffset));
+//     localStorage.setItem('pageYOffset', JSON.stringify(window.pageYOffset));
 //   }
 // }
 
@@ -93,29 +85,36 @@ export let dataForModalMarkup = null; //Об'єкт із повною інфор
 //
 //
 //
-// export const infinity = document.querySelector('.infitity-scroll');
-
-// export function spinnerPlay() {
-//   refs.bodyEl.classList.add('loading');
-// }
-
-// export function spinnerStop() {
-//   setTimeout(function () {
-//     refs.bodyEl.classList.remove('loading');
-//     refs.bodyEl.classList.add('loaded');
-//   }, 1000);
-// }
-// spinnerPlay();
-// spinnerStop();
 //
 //
 //
-// const headerEl = document.querySelector('.header');
-// const headerContainer = document.querySelector('.header-container');
-// const logoHeader = document.querySelector('.header-logo');
-// const logoTextHeader = document.querySelector('.header-text-logo');
-// const iconFilmHeader = document.querySelector('.icon-film');
-//const galle = document.querySelector('.search');
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -251,7 +250,7 @@ export let dataForModalMarkup = null; //Об'єкт із повною інфор
 //Ігор
 //
 // ------- btnUp -------
-
+//
 // refs.btnUpEl.addEventListener('click', scrollUp);
 
 // function show() {
@@ -291,8 +290,8 @@ export let dataForModalMarkup = null; //Об'єкт із повною інфор
 
 //   btnIconSunEl.classList.remove('btn-icon-hidden');
 //   btnIconMoonEl.classList.add('btn-icon-hidden');
-//   headerContainerEl.classList.remove('header-container');  
-//   headerContainerEl.classList.add('header-container-dark');    
+//   headerContainerEl.classList.remove('header-container');
+//   headerContainerEl.classList.add('header-container-dark');
 //   localStorage.theme = 'dark';
 // }
 
@@ -300,9 +299,9 @@ export let dataForModalMarkup = null; //Об'єкт із повною інфор
 //   document.body.classList.remove('dark');
 
 //   btnIconMoonEl.classList.remove('btn-icon-hidden');
-//   btnIconSunEl.classList.add('btn-icon-hidden');  
-//   headerContainerEl.classList.remove('header-container-dark');  
-//   headerContainerEl.classList.add('header-container');  
+//   btnIconSunEl.classList.add('btn-icon-hidden');
+//   headerContainerEl.classList.remove('header-container-dark');
+//   headerContainerEl.classList.add('header-container');
 //   localStorage.theme = 'light';
 // }
 
@@ -313,7 +312,7 @@ export let dataForModalMarkup = null; //Об'єкт із повною інфор
 //     setDarkTheme();
 //   }
 
-//   if (localStorage.theme === 'dark' && JSON.parse(localStorage.getItem('pageYOffset')) > refs.headerEl.offsetTop) {
+//   if (localStorage.theme === 'dark' && window.pageYOffset > positionHeader) {
 //     headerContainer.classList.add('fixed-header-dark');
 //   } else {
 //     headerContainer.classList.remove('fixed-header-dark');
@@ -351,10 +350,14 @@ export let dataForModalMarkup = null; //Об'єкт із повною інфор
 //Ірина Петренко
 //
 //
-// teamModalOpenBtn: document.querySelector('button[data-team-modal-open]'),
-// teamModalCloseBtn: document.querySelector('div[data-team-modal-close]'),
-// teamModal: document.querySelector('div[data-team-modal]'),
-
+//
+//
+//
+//
+//
+//
+//
+//
 function openTeamModal() {
   refs.teamModal.classList.remove('is-hidden-team');
 }
@@ -444,29 +447,96 @@ document.addEventListener('keydown', function (event) {
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 //Мар'яна Собашевська
+import { handleMakeBtnAddRemoveWatchedLib } from './js/btnAddToWatchedLib';
+import { handleMakeBtnAddRemoveQueueLib } from './js/btnAddToQueueLib';
 
-import { handleMakeBtnAddRemoveWatched } from './js/btnAddToWatched';
-import { handleMakeBtnAddRemoveQueue } from './js/btnAddToQueue';
-import { saveLocalStorage } from './js/localStorage';
-import { loadLocalStorage } from './js/localStorage';
-const keyQueue = 'queue';
-const keyWatched = 'watched';
+refs.movieModalEl.addEventListener('click', handleMakeBtnAddRemoveWatchedLib); //обробник для кнопки AddRemoveTo Watched
 
-refs.movieModalEl.addEventListener('click', handleMakeBtnAddRemoveWatched); //обробник для кнопки AddRemoveTo Watched
+refs.movieModalEl.addEventListener('click', handleMakeBtnAddRemoveQueueLib);
 
-refs.movieModalEl.addEventListener('click', handleMakeBtnAddRemoveQueue);
-
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -583,44 +653,44 @@ refs.movieModalEl.addEventListener('click', handleMakeBtnAddRemoveQueue);
 //
 //
 //
-// Денис
-// function renderMarkup(array) {
-//   const markup = createTrendMovesMarkup(array);
-//   refs.galleryListEl.innerHTML = '';
-//   refs.galleryListEl.insertAdjacentHTML('beforeend', markup);
-// }
-// fetchTrendMoves()
-//   .then(data => {
-//     createTrailerIdAndKeysArray(data);
-//     setTimeout(() => {
-//       renderMarkup(data);
-//     }, 300);
-//   })
-//   .catch(error => console.log(error));
-
-// refs.searchFormEl.addEventListener('submit', handleClickSearchButton);
-
-// function handleClickSearchButton(e) {
-//   e.preventDefault();
-//   const inputData = refs.searchInputEl.value;
-//   if (inputData === '') {
-//     Notify.failure('Input is empty');
-//     return;
-//   }
-//   fetchMovesByKeyword(inputData.trim())
-//     .then(data => {
-//       if (data.results.length === 0) {
-//         Notify.failure('No results for your search');
-//         return;
-//       }
-//       createTrailerIdAndKeysArray(data);
-//       setTimeout(() => {
-//         renderMarkup(data);
-//       }, 300);
-//       scrollUp();
-//     })
-//     .catch(error => console.log(error));
-// }
+//Денис
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -781,214 +851,85 @@ refs.movieModalEl.addEventListener('click', handleMakeBtnAddRemoveQueue);
 //
 //
 //
-//
-//
 //Ірина
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//Олена
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//Олександр
+import { createLibraryMarkup } from './js/createLibraryMarkup.js';
+
+const watchedBtn = document.querySelector('.watched-btn');
+const queueBtn = document.querySelector('.queue-btn');
+const galleryContainerEl = document.querySelector('.gallery-lib-list');
+const nothingContainer = document.querySelector('.library-container');
+
+watchedBtn.addEventListener('click', handleWatchedBtn);
+queueBtn.addEventListener('click', handleQueueBtn);
+
+let watchedFilms = [];
+let queueFilms = [];
+
+function handleWatchedBtn() {
+  nothingContainer.style.display = 'none';
+  watchedBtn.classList.add('is-active-lib');
+  queueBtn.classList.remove('is-active-lib');
+
+  watchedFilms = JSON.parse(localStorage.getItem('watched')) || [];
+
+  if (watchedFilms.length <= 0) {
+    nothingContainer.style.display = 'block';
+    galleryContainerEl.innerHTML = '';
+    return;
+  }
+
+  const markup = createLibraryMarkup(watchedFilms);
+  galleryContainerEl.innerHTML = markup;
+  renderTrailerMarkup(watchedFilms);
+}
+
+function handleQueueBtn() {
+  watchedBtn.classList.remove('is-active-lib');
+  queueBtn.classList.add('is-active-lib');
+
+  queueFilms = JSON.parse(localStorage.getItem('queue')) || [];
+
+  nothingContainer.style.display = 'none';
+
+  if (queueFilms.length <= 0) {
+    nothingContainer.style.display = 'block';
+    galleryContainerEl.innerHTML = '';
+    return;
+  }
+  const markup = createLibraryMarkup(queueFilms);
+  galleryContainerEl.innerHTML = markup;
+  renderTrailerMarkup(queueFilms);
+}
+
+handleWatchedBtn();
+
+//
+//
+//
+let initialLocalStorageWatched;
+let initialLocalStorageQueue;
+//
+function reNewMarkupByCloseBtn() {
+  const afterLocalStorageWatched = JSON.parse(localStorage.getItem('watched'));
+  const afterLocalStorageQueue = JSON.parse(localStorage.getItem('queue'));
+  if (
+    watchedBtn.classList[2] &&
+    initialLocalStorageWatched !== afterLocalStorageWatched
+  ) {
+    handleWatchedBtn();
+  }
+  if (
+    queueBtn.classList[2] &&
+    initialLocalStorageQueue !== afterLocalStorageQueue
+  ) {
+    handleQueueBtn();
+  }
+}
 //
 
 refs.backdropMovieModal.addEventListener('click', onCloseMovieModal);
 window.addEventListener('keydown', onCloseMovieModal);
-refs.galleryContainerEl.addEventListener('click', handleMovieCard);
+refs.galleryLibListEl.addEventListener('click', handleMovieCard);
 
 function onCloseMovieModal(e) {
   if (
@@ -997,24 +938,25 @@ function onCloseMovieModal(e) {
     e.target.classList[0] === 'icon-close' ||
     e.target.classList[0] === 'svg-icon-close' ||
     e.code === 'Escape'
-    ) {
-      refs.backdropMovieModal.classList.add('is-hidden');
-      refs.movieModalEl.classList.add('is-hidden');
-      refs.bodyEl.style.overflow = 'scroll';
-      refs.backdropMovieModal.removeEventListener('click', onCloseMovieModal);
-      window.removeEventListener('keydown', onCloseMovieModal);
-    }
+  ) {
+    refs.backdropMovieModal.classList.add('is-hidden');
+    refs.movieModalEl.classList.add('is-hidden');
+    refs.bodyEl.style.overflow = 'scroll';
+    refs.backdropMovieModal.removeEventListener('click', onCloseMovieModal);
+    window.removeEventListener('keydown', onCloseMovieModal);
+
+    reNewMarkupByCloseBtn();
   }
-  
-  function idRewriter(event) {
-    if (event.target.nodeName === 'DIV') {
-      movieIdForModalMarkup = event.target.dataset.id;
-      return;
-    }
-    movieIdForModalMarkup = event.target.parentElement.dataset.id;
-  return;
 }
 
+function idRewriter(event) {
+  if (event.target.nodeName === 'DIV') {
+    movieIdForLibModalMarkup = event.target.dataset.id;
+    return;
+  }
+  movieIdForLibModalMarkup = event.target.parentElement.dataset.id;
+  return;
+}
 export function handleMovieCard(event) {
   idRewriter(event); //ця функція перезаписує значення movieIdForModalMarkup
   if (
@@ -1025,17 +967,19 @@ export function handleMovieCard(event) {
   ) {
     return;
   }
-  dataForModalMarkup = fetchDataById(movieIdForModalMarkup)
+  dataForLibModalMarkup = fetchDataById(movieIdForLibModalMarkup)
     .then(data => {
       refs.backdropMovieModal.classList.remove('is-hidden');
       refs.movieModalEl.classList.remove('is-hidden');
       refs.backdropMovieModal.addEventListener('click', onCloseMovieModal);
       window.addEventListener('keydown', onCloseMovieModal);
-      const markup = createMoveModalMarkup(data, movieIdForModalMarkup);
+      const markup = createMoveModalMarkup(data, movieIdForLibModalMarkup);
       refs.movieModalFilmInfoEl.innerHTML = markup;
       refs.bodyEl.style.overflow = 'hidden';
+
       return data;
     })
     .catch(error => console.log(error));
+  initialLocalStorageWatched = JSON.parse(localStorage.getItem('watched'));
+  initialLocalStorageQueue = JSON.parse(localStorage.getItem('queue'));
 }
-

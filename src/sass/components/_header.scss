@@ -1,0 +1,437 @@
+a {
+  text-decoration: none;
+}
+
+//Хедер
+.header {
+  background-color: #ffffff;
+  width: 100%;
+  padding-top: 32px;
+  //padding-bottom: 32px;
+}
+
+.header-container {
+  position: relative;
+  height: 460px;
+  width: 280px;
+  width: 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  border-radius: 15px;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  transform: translate3d(0);
+  transition: transform 700ms ease-in-out;
+  background-image: linear-gradient(0deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.4)),
+    url(/src/images/header/header-bg-mob.jpg);
+  @include retina {
+    background-image: linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0),
+        rgba(0, 0, 0, 0.4)
+      ),
+      url(/src/images/header/header-bg-mob-2x.jpg);
+  }
+
+  @include tablet {
+    height: 222px;
+    width: 704px;
+    background-image: linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.05),
+        rgba(0, 0, 0, 0.05)
+      ),
+      url(/src/images/header/header-tablet.jpg);
+    @include retina {
+      background-image: linear-gradient(
+          0deg,
+          rgba(0, 0, 0, 0.05),
+          rgba(0, 0, 0, 0.05)
+        ),
+        url(/src/images/header/header-tablet-2x.jpg);
+    }
+  }
+  @include desktop {
+    height: 316px;
+    width: 1216px;
+    background-image: linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.05),
+        rgba(0, 0, 0, 0.05)
+      ),
+      url(/src/images/header/header-desktop.jpg);
+    @include retina {
+      background-image: linear-gradient(
+          0deg,
+          rgba(0, 0, 0, 0.05),
+          rgba(0, 0, 0, 0.05)
+        ),
+        url(/src/images/header/header-desktop-2x.jpg);
+    }
+  }
+}
+
+//Форма пошуку
+.search {
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: flex-start;
+  position: absolute;
+  top: 16px;
+  left: 14px;
+  gap: 8px;
+
+  @media screen and (min-width: 768px) {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  @media screen and (min-width: 768px) {
+    gap: 4px;
+    left: 16px;
+    align-items: center;
+  }
+
+  @include desktop {
+    flex-wrap: nowrap;
+    left: 32px;
+    gap: 8px;
+  }
+}
+
+.form-search {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 252px;
+  height: 34px;
+
+  @include tablet {
+    width: 165px;
+    height: 38px;
+  }
+
+  @include desktop {
+    width: 187px;
+    height: 42px;
+  }
+}
+
+.input-search {
+  padding-left: 16px;
+  font-size: 12px;
+  height: 34px;
+  width: 100%;
+  border: 0;
+  border-radius: 100px;
+  transition: background-color var(--animation);
+  transition: border var(--animation);
+
+  @include tablet {
+    height: 38px;
+    font-size: 14px;
+  }
+  @include desktop {
+    height: 42px;
+    font-size: 14px;
+  }
+
+  &:hover,
+  &:focus {
+    background-color: #f1ecca;
+    border: 1px solid #bbac49;
+  }
+}
+
+.search-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  right: 16px;
+  border: 0;
+  cursor: pointer;
+  background-color: transparent;
+  transition: scale var(--animation);
+  &:hover {
+    scale: 1.5;
+  }
+}
+
+//кнопки Home та My library
+.navigation {
+  margin-bottom: 8px;
+
+  @include tablet {
+    margin-bottom: 0;
+    margin-right: 50px;
+  }
+
+  @include desktop {
+    margin-bottom: 0;
+    margin-right: 470px;
+  }
+}
+
+.menu-list {
+  display: flex;
+  gap: 4px;
+
+  @include desktop {
+    gap: 8px;
+  }
+}
+
+.menu-link {
+  text-align: center;
+  background-color: var(--buttons-header-bg-color);
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 1.17;
+  text-transform: uppercase;
+  padding: 10px 26px;
+  border-radius: 100px;
+  color: var(--buttons-header-text-color);
+  cursor: pointer;
+  transition: color var(--animation);
+  transition: background-color var(--animation);
+
+  @include tablet {
+    padding: 12px 24px;
+  }
+
+  @include desktop {
+    padding: 14px 32px;
+  }
+
+  &:hover {
+    color: var(--accent-text-color);
+    background-color: var(--buttons-header-hover-bg-color);
+  }
+}
+
+//логотип filmoteka
+.header-logo {
+  position: absolute;
+  bottom: 20px;
+  left: 45px;
+  transition: scale var(--animation);
+
+  @include tablet {
+    bottom: 16px;
+    left: 16px;
+  }
+  @include desktop {
+    bottom: 32px;
+    left: 32px;
+  }
+
+  &:hover {
+    scale: 1.1;
+  }
+}
+
+.logo-list {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  @include desktop {
+    gap: 16px;
+  }
+}
+
+.header-text-logo {
+  font-weight: 500;
+  font-size: 32px;
+  line-height: 1.17;
+  color: var(--logo-text-color);
+
+  @include tablet {
+    font-size: 40px;
+  }
+  @include desktop {
+    font-size: 64px;
+  }
+}
+
+// btn-theme
+.btn-theme {
+  position: absolute;
+  top: 5px;
+  left: 235px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background-color: var(--buttons-header-bg-color);
+  border: var(--buttons-header-bg-color);
+  cursor: pointer;
+  transition: background-color var(--animation), border var(--animation);
+
+  &:hover {
+    background-color: var(--buttons-header-hover-bg-color);
+    border: 2px solid var(--buttons-header-hover-bg-color);
+  }
+
+  @include tablet {
+    left: 398px;
+    top: 16px;
+  }
+
+  @include desktop {
+    left: 480px;
+    top: 16px;
+  }
+}
+
+@media (pointer: coarse) {
+  .btn-theme:hover {
+    background-color: var(--buttons-header-bg-color);
+    border: var(--buttons-header-bg-color);
+  }
+}
+
+.btn-theme-icon {
+  fill: var(--buttons-header-text-color);
+  width: 40px;
+  height: 40px;
+
+  .btn-theme:hover & {
+    fill: var(--buttons-header-hover-text-color);
+  }
+}
+
+@media (pointer: coarse) {
+  .btn-theme:hover .btn-theme-icon {
+    fill: var(--buttons-header-text-color);
+  }
+}
+
+.btn-icon-moon,
+.btn-icon-sun {
+  opacity: 0;
+  transition: opacity var(--animation);
+}
+
+.btn-icon-hidden {
+  opacity: 1;
+}
+
+.icon-film {
+  @include tablet {
+    width: 40px;
+    height: 40px;
+  }
+
+  @include desktop {
+    width: 59px;
+    height: 59px;
+  }
+}
+
+.fixed {
+  //клас що додається до хедера при скролі
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.fixed-header {
+  height: 95px;
+  width: 100%;
+  transform: scale(1.01);
+  transition: transform 450ms cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateY(0);
+  transition: transform 800ms ease-out;
+  background-image: linear-gradient(
+      0deg,
+      rgba(0, 0, 0, 0.05),
+      rgba(0, 0, 0, 0.05)
+    ),
+    url(/src/images/header/header-tablet.jpg);
+  @include retina {
+    background-image: linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.05),
+        rgba(0, 0, 0, 0.05)
+      ),
+      url(/src/images/header/header-tablet-2x.jpg);
+  }
+
+  @include tablet {
+    height: 75px;
+  }
+
+  @include desktop {
+    height: 75px;
+    background-image: linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.05),
+        rgba(0, 0, 0, 0.05)
+      ),
+      url(/src/images/header/header-desktop.jpg);
+    @include retina {
+      background-image: linear-gradient(
+          0deg,
+          rgba(0, 0, 0, 0.05),
+          rgba(0, 0, 0, 0.05)
+        ),
+        url(/src/images/header/header-desktop-2x.jpg);
+    }
+  }
+}
+
+.is-hidden {
+  display: none;
+}
+
+.fixed-logo {
+  top: 16px;
+  display: none;
+
+  @include tablet {
+    display: none;
+  }
+
+  @include desktop {
+    top: 16px;
+    margin-left: 505px;
+  }
+}
+
+.text-logo-fixed {
+  font-weight: 500;
+  color: var(--logo-text-color);
+
+  @include tablet {
+    display: none;
+  }
+  @include desktop {
+    font-size: 32px;
+  }
+}
+
+.icon-film-fixed {
+  @include tablet {
+    width: 30px;
+    height: 30px;
+  }
+
+  @include desktop {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+// .gallery-fixed {
+//   padding-top: 20px;
+// }
+
+// .header {
+//   background-image: -webkit-image-set(./);
+// }
